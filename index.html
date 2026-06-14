@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSINT Mastery • Lessons • Fedora 44 KDE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .lesson-serif { font-family: Georgia, 'Times New Roman', serif; line-height: 1.75; }
+        .nav-lesson { transition: all 0.1s; }
+        .nav-lesson:hover { background-color: #f1f5f9; }
+        .nav-lesson.active { background-color: #dbeafe; border-left: 4px solid #1e40af; font-weight: 600; }
+        .nav-lesson.completed { background-color: #dcfce7; }
+        .nav-lesson.locked { opacity: 0.6; }
+        pre { background: #0f172a; color: #e0e7ff; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.875rem; }
+        .quiz-option { transition: all 0.1s; }
+        .quiz-option:hover { background-color: #f1f5f9; }
+        .quiz-option.selected { background-color: #dbeafe; border-color: #1e40af; }
+        .section-card { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 12px; }
+        .mastery-badge { background: linear-gradient(90deg, #166534, #4ade80); color: white; }
+    </style>
+</head>
+<body class="bg-slate-100">
+    <nav class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <div class="w-10 h-10 bg-blue-800 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-search text-white text-2xl"></i></div>
+                <div>
+                    <span class="font-bold text-2xl tracking-tight">OSINT Mastery</span>
+                    <span class="ml-2 text-xs font-mono bg-red-100 text-red-800 px-2 py-0.5 rounded">BAIL BONDSMAN FUGITIVE FOCUS</span>
+                    <span class="ml-1 text-xs font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded">FEDORA 44 KDE</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="overall-progress" class="flex items-center gap-x-3 bg-white border px-4 py-1.5 rounded-2xl text-sm">
+                    <div class="w-36 h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div id="progress-fill" class="h-2 bg-emerald-600 transition-all" style="width:0%"></div>
+                    </div>
+                    <span id="progress-text" class="font-mono text-emerald-700 font-semibold">0/8 lessons</span>
+                </div>
+                <button onclick="resetAllProgress()" class="text-xs px-3 py-1.5 bg-white border hover:bg-red-50 text-red-600 rounded-2xl flex items-center gap-x-1">
+                    <i class="fa-solid fa-undo"></i> <span class="hidden md:inline">Reset All</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Strong focus banner for bail bondsman work -->
+    <div class="max-w-7xl mx-auto px-6 pt-4">
+        <div class="bg-red-900 text-white rounded-3xl p-4 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center gap-3">
+                <div class="flex-1">
+                    <strong class="text-lg">PRIMARY USE CASE: Bail Bondsman Fugitive Recovery</strong><br>
+                    <span class="text-red-200 text-sm">This version is optimized for locating bail jumpers. Lessons are ordered by value for this work. Use these tools to generate leads (recent social activity, new accounts, associate mapping, photo metadata) and deliver professional reports to bondsmen.</span>
+                </div>
+                <div class="text-xs md:text-right">
+                    Always: Public sources only • Coordinate with bondsman • Document everything for court
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Static fallback so the page is NEVER completely blank -->
+    <div id="static-fallback" class="max-w-7xl mx-auto px-6">
+        <div class="bg-white border rounded-3xl p-6 mb-6">
+            <h1 class="text-3xl font-bold">OSINT Mastery Lessons — Bail Jumper Focus (Fedora 44 KDE)</h1>
+            <p class="text-slate-600 mt-2">If the interactive lessons below are not loading, <strong>press F12 → Console</strong> and tell me any red errors. The page below this box should populate automatically once the JavaScript runs.</p>
+            <p class="mt-2 text-sm">This file uses JavaScript to load the lesson content and quizzes. It works best in Zen Browser, Firefox, or Chromium. Hard refresh (Ctrl+Shift+R) after updates.</p>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Lessons Sidebar -->
+        <div class="lg:col-span-3">
+            <div class="bg-white border rounded-3xl p-4 sticky top-20">
+                <div class="font-bold text-xs tracking-widest px-2 mb-3 text-slate-500">LESSONS • FEDORA 44 KDE</div>
+                <div id="lesson-nav"></div>
+                <div class="mt-4 pt-4 border-t text-xs text-slate-500 px-2">
+                    Score <strong>≥80%</strong> on a lesson's Basic Quiz → auto-completes the lesson and unlocks the Advanced lesson.<br>
+                    Advanced has deeper scripting, Fedora-specific automation, and integration examples.
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Lesson Content -->
+        <div class="lg:col-span-9">
+            <div id="lesson-content" class="bg-white border rounded-3xl p-8 min-h-[70vh]">
+                <!-- Static reliable version of Lesson 0 (Bail Bondsman Fugitive Focus) - always loads -->
+                <div>
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="px-3 py-1 text-xs font-bold bg-blue-100 text-blue-700 rounded-2xl">LESSON 1 (FOUNDATION)</span>
+                            <h1 class="text-4xl font-bold tracking-tight mt-2">OSINT Fundamentals, Ethics &amp; Presenting to Bail Bondsmen</h1>
+                            <span class="text-sm text-red-600 font-semibold">PRIORITY #1 for your bail jumper work</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="font-semibold text-lg mb-3 flex items-center gap-2"><i class="fa-brands fa-youtube text-red-600"></i> Recommended Videos</h3>
+                        <div class="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-2xl text-sm">
+                            <strong>Important for playing videos inside the browser (no "watch on YouTube" or error 153):</strong><br>
+                            Open this file via a local web server instead of double-clicking the .html file directly.<br>
+                            Run this command in terminal (from anywhere):<br>
+                            <code class="bg-yellow-100 px-1">cd ~/OSINT && python3 -m http.server 8000</code><br>
+                            Then open <a href="http://localhost:8000/OSINT-Mastery-Lessons.html" target="_blank" class="underline">http://localhost:8000/OSINT-Mastery-Lessons.html</a> in your browser.<br>
+                            The videos will then play inline with full controls.
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <div class="video-container mb-2">
+                                    <iframe src="https://www.youtube.com/embed/XEmIlyJmVQo?enablejsapi=1&amp;modestbranding=1&amp;rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <a href="https://www.youtube.com/watch?v=XEmIlyJmVQo" target="_blank" class="text-xs text-blue-700 hover:underline">OSINT for Beginners: Find Everything About Anyone! →</a>
+                            </div>
+                            <div>
+                                <div class="video-container mb-2">
+                                    <iframe src="https://www.youtube.com/embed/i9y7pLzGyNk?enablejsapi=1&amp;modestbranding=1&amp;rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                </div>
+                                <a href="https://www.youtube.com/watch?v=i9y7pLzGyNk" target="_blank" class="text-xs text-blue-700 hover:underline">OSINT Framework Tutorial →</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 lesson-serif text-[15px]">
+                        <p><strong>This is your foundation for offering services to bail bondsmen.</strong> Your goal: deliver actionable leads (recent social activity, new accounts, associate networks, vehicle info, photo metadata) using only public sources so the bondsman can act quickly and legally.</p>
+                        
+                        <h4 class="font-semibold mt-6">What Bondsmen Actually Want (Pitch This)</h4>
+                        <ul class="list-disc pl-6 text-sm space-y-1">
+                            <li>Recent digital footprint (posts from last 7-30 days = current area)</li>
+                            <li>New or reactivated social/email accounts (sign of new location or alias)</li>
+                            <li>Associates / family / romantic interests map</li>
+                            <li>Vehicle sightings or plates from public posts</li>
+                            <li>Photos/videos with metadata or background clues</li>
+                            <li>Clean, timestamped report they can use or hand to law enforcement</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mt-6">Fedora 44 KDE Specific Setup</h4>
+                        <ul class="list-disc pl-6 text-sm space-y-1">
+                            <li>Always connected to VPN</li>
+                            <li>Use Zen Browser or a fresh Firefox profile (no personal logins, uBlock Origin enabled)</li>
+                            <li>Launch tools from your <strong>OSINT</strong> folder on the bottom panel</li>
+                            <li>Store cases in <code>~/OSINT/Cases/fugitive-LASTNAME-DATE/</code></li>
+                            <li>Use Konsole with <code>--hold</code> for long-running commands</li>
+                        </ul>
+                        
+                        <p class="mt-4 text-sm bg-red-50 border border-red-200 p-3 rounded-2xl"><strong>Legal &amp; Business Reminder:</strong> Only use publicly available data. Get everything in writing with the bondsman. Document chain of custody. Never confront the jumper yourself unless you are licensed to do so in your jurisdiction.</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <h4 class="font-semibold mb-2">Key Learning Objectives — Bail Bondsman Focus</h4>
+                        <ul class="list-disc pl-6 text-sm space-y-1">
+                            <li>Understand the OSINT intelligence cycle and why passive-first matters</li>
+                            <li>Apply US-focused legal and ethical rules — critical for bondsman work</li>
+                            <li>Harden your Fedora 44 KDE environment</li>
+                            <li>Know your existing panel launchers (OSINT, Tech-Tools, Cybersec)</li>
+                            <li>Know exactly what data bondsmen value most for locating bail jumpers</li>
+                        </ul>
+                    </div>
+
+                    <button onclick="takeQuiz(0, false)" class="mt-5 w-full md:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-2xl flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-dice"></i> Take Basic Quiz for Lesson 1 (≥80% = complete + unlock advanced)
+                    </button>
+                    <div id="basic-quiz-result-0" class="mt-3 text-sm"></div>
+
+                    <div class="mt-8 p-4 bg-slate-100 rounded-2xl text-sm">
+                        <strong>Next steps after this lesson:</strong> Move to the Username lesson (Maigret + Sherlock) and Email lesson (Holehe + h8mail) — these are the highest-ROI tools for actual bail jumper leads.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tailwind + Data
+        function initTailwind() {
+            // already using CDN
+        }
+
+        const LESSONS = [
+            {
+                id: 0,
+                title: "OSINT Fundamentals, Ethics & Fedora Lab Setup",
+                short: "Foundations + Your KDE Workstation",
+                icon: "fa-book-open",
+                videos: [
+                    {title: "OSINT for Beginners: Find Everything About Anyone!", url: "https://www.youtube.com/watch?v=XEmIlyJmVQo"},
+                    {title: "OSINT Framework Tutorial", url: "https://www.youtube.com/watch?v=i9y7pLzGyNk"}
+                ],
+                basic: {
+                    objectives: [
+                        "Understand the OSINT intelligence cycle and why passive-first matters",
+                        "Apply US-focused legal and ethical rules (proportionality, no doxxing, client coordination) — critical for bondsman work",
+                        "Harden your Fedora 44 KDE environment (VPN, dedicated browser, case folders)",
+                        "Know your existing panel launchers (OSINT, Tech-Tools, Cybersec) and how to use them",
+                        "Know exactly what data bondsmen value most for locating bail jumpers"
+                    ],
+                    content: `
+                        <p class="lesson-serif"><strong>This lesson is your foundation for offering services to bail bondsmen.</strong> Your goal: deliver actionable leads (recent social activity, new accounts, associate networks, vehicle info, photo metadata) using only public sources so the bondsman can act quickly and legally.</p>
+                        
+                        <h4 class="font-semibold mt-6">What Bondsmen Actually Want (Pitch This)</h4>
+                        <ul class="list-disc pl-6 text-sm space-y-1">
+                            <li>Recent digital footprint (posts from last 7-30 days = current area)</li>
+                            <li>New or reactivated social/email accounts (sign of new location or alias)</li>
+                            <li>Associates / family / romantic interests map</li>
+                            <li>Vehicle sightings or plates from public posts</li>
+                            <li>Photos/videos with metadata or background clues</li>
+                            <li>Clean, timestamped report they can use or hand to law enforcement</li>
+                        </ul>
+                        
+                        <h4 class="font-semibold mt-6">Fedora 44 KDE Specific Setup</h4>
+                        <ul class="list-disc pl-6 text-sm space-y-1">
+                            <li>Always connected to VPN (NordVPN or your choice)</li>
+                            <li>Use Zen Browser or a fresh Firefox profile (no personal logins, uBlock Origin enabled)</li>
+                            <li>Launch tools from your <strong>OSINT</strong> folder on the bottom panel</li>
+                            <li>Store cases in <code>~/OSINT/Cases/fugitive-LASTNAME-DATE/</code></li>
+                            <li>Use Konsole with <code>--hold</code> for long-running commands</li>
+                        </ul>
+                        <p class="mt-4 text-sm bg-red-50 border border-red-200 p-3 rounded-2xl"><strong>Legal & Business Reminder:</strong> Only public sources. Get everything in writing with the bondsman. Document chain of custody. Never confront the jumper yourself unless you are licensed to do so in your jurisdiction. Overstepping can get cases thrown out or you in trouble.</p>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Building Your Personal OSINT Playbook</h4>
+                        <p>Create reusable bash scripts and Obsidian templates. Example starter script in <code>~/OSINT/Scripts/</code> for case initialization.</p>
+                        <pre><code># Quick case starter (save as ~/OSINT/Scripts/new-case.sh)
+#!/bin/bash
+NAME=$1
+DATE=$(date +%F)
+mkdir -p ~/OSINT/Cases/\${NAME}-\${DATE}
+cd ~/OSINT/Cases/\${NAME}-\${DATE}
+echo "Case opened for $NAME on $DATE" > README.md
+kate README.md</code></pre>
+                        <p class="text-sm mt-2">Pro tip: Pin a "New Case" .desktop launcher in your OSINT folder.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"What should be your very first step on a new OSINT case from a bondsman?", o:["Run every tool at full power immediately","Gather all available seed data (names, phones, emails, vehicles) from the client","Post publicly asking for help","Skip to advanced tools"], a:1, e:"Good seed data makes every later step dramatically more effective."},
+                    {q:"Which panel folder on your Fedora KDE taskbar is meant for theHarvester, Maigret, Maltego, etc.?", o:["Cybersec","Tech-Tools","OSINT","Remote-Access"], a:2, e:"We specifically created and organized the OSINT folder for intel tools."},
+                    {q:"True or False: Using a dedicated browser profile with no personal logins is a core OPSEC practice on Fedora KDE for OSINT.", o:["True","False"], a:0, e:"Separation prevents cross-contamination and accidental doxxing of yourself."}
+                ],
+                advancedQuestions: [
+                    {q:"Best practice for long-running tools in Konsole on KDE so the window doesn't close on finish?", o:["Just run them","konsole --hold -e command","Use & at the end only","Run in background and forget"], a:1, e:"--hold keeps the output visible so you can read results."}
+                ]
+            },
+            {
+                id: 1,
+                title: "theHarvester — Emails, Subdomains & Names",
+                short: "Classic passive harvesting",
+                icon: "fa-envelope",
+                videos: [
+                    {title: "Unleashing theHarvester | Mastering OSINT", url: "https://www.youtube.com/watch?v=tf67tjWLTeQ"},
+                    {title: "How to Gather Sensitive Data with theHarvester", url: "https://www.youtube.com/watch?v=KAgwHkFn5nY"}
+                ],
+                basic: {
+                    objectives: ["Master core flags (-d, -l, -b, -f)", "Know when and how to add API keys", "Understand passive nature and output formats", "Basic chaining and safe target usage on Fedora"],
+                    content: `
+                        <p>theHarvester is still one of the best first tools. On Fedora 44 it runs great via the git clone in ~/OSINT/Tools/theHarvester or uv/pip.</p>
+                        <h4 class="font-semibold mt-4">Fedora 44 KDE Install (Recommended)</h4>
+                        <pre><code>cd ~/OSINT/Tools/theHarvester
+git pull
+# or fresh clone
+uv sync
+uv run theHarvester -h</code></pre>
+                        <h4 class="font-semibold mt-4">Core Commands</h4>
+                        <pre><code># Most common starter (safe target)
+theHarvester -d kali.org -l 400 -b all -f kali-out
+
+# Focused + JSON for scripting
+theHarvester -d example.com -b google,bing,duckduckgo -f results.json</code></pre>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: API Keys + Automation</h4>
+                        <p>Edit <code>api-keys.yaml</code> (in the repo root) for SecurityTrails, GitHub, etc. to get dramatically more results.</p>
+                        <p>Create a small wrapper script for your common targets:</p>
+                        <pre><code>#!/bin/bash
+DOMAIN=$1
+theHarvester -d $DOMAIN -l 500 -b all -f ~/OSINT/Results/\${DOMAIN}-$(date +%F).json
+echo "Results saved for $DOMAIN"</code></pre>
+                        <p class="text-sm mt-2">Run it from your OSINT panel launcher.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"What does the -b flag control in theHarvester?", o:["Output format","Which data sources to use (google, linkedin, all, etc.)","Number of results limit","DNS server to query"], a:1, e:"-b google,bing,all etc. controls the passive sources."},
+                    {q:"On Fedora 44 KDE, where should you keep your theHarvester clone for easy launching from the panel?", o:["~/Downloads","~/OSINT/Tools/theHarvester (as we set up)","/usr/bin","~/Documents"], a:1, e:"We created the structure and panel launcher for this exact reason."},
+                    {q:"Why add API keys to api-keys.yaml?", o:["To make the tool look nicer","To unlock higher result limits and additional premium sources","It is no longer needed in 2026","To disable rate limiting entirely"], a:1, e:"Many good sources require authentication."}
+                ],
+                advancedQuestions: [
+                    {q:"Advanced tip: How do you best feed theHarvester output into other tools on your workstation?", o:["Copy-paste by hand","Save as JSON and pipe/parse with jq or Python scripts","Only use the HTML report","Never chain tools"], a:1, e:"JSON is machine readable and perfect for automation."}
+                ]
+            },
+            {
+                id: 2,
+                title: "Subfinder — Fast Passive Subdomain Recon",
+                short: "ProjectDiscovery subdomain king",
+                icon: "fa-sitemap",
+                videos: [
+                    {title: "Bug Bounty & Ethical Hacking - SubFinder Tool Tutorial", url: "https://www.youtube.com/watch?v=ffU5StSBrjQ"},
+                    {title: "5 Minute Hacks: Adding Subfinder Sources (Official)", url: "https://www.youtube.com/watch?v=L61VIe271vQ"}
+                ],
+                basic: {
+                    objectives: ["Install via go on Fedora", "Use -silent for clean piping", "Manage config.yaml for API keys", "Master the recon chain subfinder | httpx | nuclei"],
+                    content: `
+                        <p>Subfinder is the current gold standard for passive subdomain enumeration. Extremely fast and designed to be chained.</p>
+                        <h4 class="font-semibold mt-4">Fedora 44 KDE Install</h4>
+                        <pre><code>go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+# Make sure $GOPATH/bin or ~/go/bin is in PATH
+subfinder -h</code></pre>
+                        <h4 class="font-semibold mt-4">Everyday Commands</h4>
+                        <pre><code>subfinder -d target.com -silent -o subs.txt
+# Best daily driver chain
+subfinder -d target.com -silent | httpx -silent -title -tech-detect</code></pre>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Config, Sources & Scripting</h4>
+                        <p>Edit <code>~/.config/subfinder/config.yaml</code> to enable more sources (VirusTotal, Censys, etc.).</p>
+                        <p>Write a small daily recon script that also updates templates and runs basic exposure checks with nuclei.</p>
+                        <pre><code>#!/bin/bash
+DOMAIN=$1
+subfinder -d $DOMAIN -silent | httpx -silent | nuclei -t http/exposures/ -o ~/OSINT/Results/\${DOMAIN}-exposures.txt</code></pre>
+                    `
+                },
+                basicQuestions: [
+                    {q:"What is the recommended way to install subfinder on Fedora 44 KDE?", o:["sudo dnf install subfinder","go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest","pip install subfinder","flatpak install subfinder"], a:1, e:"ProjectDiscovery tools are distributed via Go."},
+                    {q:"What does -silent do and why is it important?", o:["Makes it faster only","Outputs only the clean subdomains — perfect for piping to httpx/nuclei","Disables all sources","Requires root"], a:1, e:"Clean output is essential for automation chains."}
+                ],
+                advancedQuestions: [
+                    {q:"Where do you store API keys for subfinder on a standard Fedora setup?", o:["In the theHarvester folder","~/.config/subfinder/config.yaml","/etc/subfinder","Inside the binary"], a:1, e:"Standard ProjectDiscovery location."}
+                ]
+            },
+            {
+                id: 3,
+                title: "Username OSINT — Maigret + Sherlock (TOP PRIORITY for Bail Jumpers)",
+                short: "Social footprints & recent activity = current location",
+                icon: "fa-user-secret",
+                videos: [
+                    {title: "How To Become an Online Detective Using Maigret", url: "https://www.youtube.com/watch?v=qIgwTZOmMmM"},
+                    {title: "Command Line OSINT : Sherlock & Maigret", url: "https://www.youtube.com/watch?v=jdJ6XKsPeyU"}
+                ],
+                basic: {
+                    objectives: ["Install maigret (pipx recommended on Fedora)", "Generate HTML/PDF reports", "Handle rate limits and name collisions", "Pivot from usernames to new leads"],
+                    content: `
+                        <p>Maigret is currently the strongest username enumerator (2500+ sites + excellent reports). Sherlock is lighter and faster for quick checks.</p>
+                        <p class="mt-2 p-2 bg-red-50 border-l-4 border-red-500 text-sm"><strong>Bail Jumper Angle:</strong> Run every known username and alias the bondsman gives you. New or recently active accounts (posts in the last week) are often the strongest lead for current location. Recent photos in those accounts frequently show the jumper with associates or in a specific area.</p>
+                        <h4 class="font-semibold mt-4">Fedora 44 KDE Install (Best)</h4>
+                        <pre><code>pipx install maigret
+maigret --help</code></pre>
+                        <h4 class="font-semibold mt-4">Powerful Usage</h4>
+                        <pre><code>maigret "targetusername" --html --pdf --timeout 12
+# Quick check
+maigret targetusername --top-sites 80</code></pre>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Reports + Custom Sites + Scripting</h4>
+                        <p>Maigret can output XMind and JSON. You can also modify sites.md for custom targets.</p>
+                        <p>Combine with your existing repair tools: when you recover a phone via scrcpy, extract usernames and immediately run Maigret on them.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"Best way to install maigret on Fedora 44 KDE (recommended in our workstation)?", o:["sudo dnf install maigret","pipx install maigret","Flatpak only","Compile from C++"], a:1, e:"pipx keeps it isolated and in PATH cleanly."},
+                    {q:"Which flags produce the nicest reports for reading later?", o:["--fast","--html --pdf","--silent","--no-color"], a:1, e:"HTML and PDF reports are extremely useful for documentation."}
+                ],
+                advancedQuestions: []
+            },
+            {
+                id: 4,
+                title: "Email Intelligence — Holehe + h8mail (TOP PRIORITY for Bail Jumpers)",
+                short: "New accounts & recent registrations often reveal location",
+                icon: "fa-at",
+                videos: [
+                    {title: "Holehe OSINT", url: "https://www.youtube.com/watch?v=L87T4iw5170"},
+                    {title: "How to Install Holehe on Kali Linux in 2025 (works on Fedora too)", url: "https://www.youtube.com/watch?v=CGRu4RActqQ"}
+                ],
+                basic: {
+                    objectives: ["Install holehe and h8mail via pipx", "Interpret registration vs breach results", "Chain email results into username and domain searches", "Understand limitations and false positives"],
+                    content: `
+                        <p>Holehe checks password-reset flows across 100+ services. h8mail queries breach data. Extremely high signal for recent activity.</p>
+                        <p class="mt-2 p-2 bg-red-50 border-l-4 border-red-500 text-sm"><strong>Bail Jumper Angle:</strong> A brand new registration on a dating app, ride-share, or social platform in the last 1-2 weeks is often a very fresh lead on where the jumper is hiding or what name/alias they are using now. Run holehe on every email the bondsman provides.</p>
+                        <pre><code>pipx install holehe h8mail
+holehe victim@email.com
+h8mail -t victim@email.com</code></pre>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Automation & Integration</h4>
+                        <p>Script bulk email checks from a list. Feed interesting results straight into Maigret or theHarvester.</p>
+                        <p>In a fugitive case: run holehe on every email the bondsman gives you — recent signups often reveal current location or new identity.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"How does Holehe discover accounts without knowing the password?", o:["It hacks the accounts","It uses public password reset and registration check flows","It only uses Have I Been Pwned","It requires you to log in"], a:1, e:"Clever use of public account recovery mechanisms."}
+                ],
+                advancedQuestions: []
+            },
+            {
+                id: 5,
+                title: "Web Probing & Exposures — HTTPX + Nuclei",
+                short: "Live hosts, tech, and misconfigurations",
+                icon: "fa-globe",
+                videos: [
+                    {title: "Introduction to Nuclei (Official ProjectDiscovery)", url: "https://www.youtube.com/watch?v=b5qMyQvL1ZA"},
+                    {title: "The Ultimate Guide to Finding Bugs With Nuclei (deep)", url: "https://projectdiscovery.io/blog/ultimate-nuclei-guide"}
+                ],
+                basic: {
+                    objectives: ["Chain subfinder → httpx → nuclei", "Focus on exposures/ and tech-detect templates for OSINT", "Update templates regularly", "Use -tags osint for username/email enumeration templates"],
+                    content: `
+                        <p>HTTPX is the best bulk HTTP prober. Nuclei is the fastest way to find exposed panels, backups, configs, and more using community YAML templates.</p>
+                        <h4 class="font-semibold mt-4">Fedora Commands</h4>
+                        <pre><code>nuclei -update-templates
+subfinder -d target.com -silent | httpx -silent | nuclei -t http/exposures/ -o exposures.txt</code></pre>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Custom Templates & Safe OSINT Use</h4>
+                        <p>Write your own simple exposure templates. Use the official Nuclei Foundation series on YouTube. Always stay in "exposures" territory for pure intel work — avoid active exploitation unless authorized.</p>
+                        <p>Integrate with your Cybersec folder tools (Burp, Wireshark) when you need deeper manual verification.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"What is the classic safe and powerful OSINT chain on your workstation?", o:["nuclei first then subfinder","subfinder -silent | httpx -silent | nuclei","Only Google dorks","Manual browsing of every subdomain"], a:1, e:"Enumeration → live probing → detection."}
+                ],
+                advancedQuestions: []
+            },
+            {
+                id: 6,
+                title: "Automation Frameworks — SpiderFoot, Recon-ng, Maltego",
+                short: "Scale collection and visualize",
+                icon: "fa-project-diagram",
+                videos: [
+                    {title: "Ten Minute Tutorials : Using Spiderfoot for OSINT!", url: "https://www.youtube.com/watch?v=UqrwXjqxgeI"},
+                    {title: "Maltego Tutorial - OSINT Tool for Beginners (Complete)", url: "https://www.youtube.com/watch?v=6lF9aqa84hM"},
+                    {title: "SpiderFoot Tutorial 2026", url: "https://www.youtube.com/watch?v=9bIzFqO3TCA"}
+                ],
+                basic: {
+                    objectives: ["Launch SpiderFoot web UI on localhost", "Use Recon-ng marketplace modules", "Create basic Maltego graphs and run transforms", "Know when each framework is the right tool"],
+                    content: `
+                        <p>These tools multiply your reach. SpiderFoot has 200+ modules and a nice web UI. Maltego excels at visual link analysis.</p>
+                        <pre><code># SpiderFoot (easiest for many)
+spiderfoot -l 127.0.0.1:5001
+# Then open browser</code></pre>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Maltego Transforms + Recon-ng Scripting</h4>
+                        <p>Build complex graphs with Person → Email → Phone → Location entities. Export for the bondsman. Use Recon-ng in scripts for repeatable reporting.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"What is the easiest way to start SpiderFoot on Fedora KDE?", o:["Direct CLI only","spiderfoot -l 127.0.0.1:5001 then open browser","Only through Maltego","Flatpak GUI"], a:1, e:"The web UI is the most user-friendly entry point."}
+                ],
+                advancedQuestions: []
+            },
+            {
+                id: 7,
+                title: "Media, Video & Image OSINT + Fugitive Workflows (HIGH VALUE for Bail Jumpers)",
+                short: "Photos/videos often have location data or show current area",
+                icon: "fa-image",
+                videos: [
+                    {title: "OSINT At Home - EXIF/metadata in photos/videos", url: "https://www.youtube.com/watch?v=d3NsT8lJRlE"},
+                    {title: "Grabbing Videos For OSINT – yt-dlp", url: "https://nixintel.info/linux/grabbing-videos-for-osint-how-to-use-youtube-dl/"}
+                ],
+                basic: {
+                    objectives: ["Extract GPS/timestamps with exiftool", "Archive public videos with yt-dlp", "Reverse image search strategy", "Build timelines from media + previous tool output"],
+                    content: `
+                        <p>Photos and videos are high-signal. Your repair skills + scrcpy make you uniquely powerful when devices are recovered.</p>
+                        <pre><code>exiftool -gps* -all photo.jpg
+yt-dlp "https://www.tiktok.com/@user/video/123" -o "case/%(title)s.%(ext)s"</code></pre>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Full Fugitive / POI Workflow</h4>
+                        <p>This lesson directly expands your existing <code>~/OSINT/Fugitive-Location-OSINT-Guide.md</code>. Chain every previous lesson: usernames → emails → subdomains → live hosts/exposures → media → Maltego graph → report for the bondsman.</p>
+                        <p>When you have physical access to a device (legal authority), use scrcpy from your Tech-Tools folder + exiftool/yt-dlp on extracted media.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"What does exiftool commonly reveal that is gold for OSINT?", o:["Only file size","GPS coordinates, camera model, and exact creation timestamps","Passwords","Nothing useful"], a:1, e:"Embedded metadata is frequently overlooked."}
+                ],
+                advancedQuestions: []
+            }
+        ];
+
+        // State helpers
+        function getState(lessonId) {
+            const raw = localStorage.getItem('osint-lesson-' + lessonId);
+            return raw ? JSON.parse(raw) : { basicScore: 0, advancedScore: 0, completed: false, advancedUnlocked: false };
+        }
+        function saveState(lessonId, state) {
+            localStorage.setItem('osint-lesson-' + lessonId, JSON.stringify(state));
+            updateNav();
+            updateOverallProgress();
+        }
+
+        function updateOverallProgress() {
+            let completed = 0;
+            LESSONS.forEach(l => {
+                const s = getState(l.id);
+                if (s.completed) completed++;
+            });
+            const pct = Math.round((completed / LESSONS.length) * 100);
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.getElementById('progress-text').innerText = `\${completed}/\${LESSONS.length} lessons`;
+        }
+
+        function updateNav() {
+            const container = document.getElementById('lesson-nav');
+            container.innerHTML = '';
+            LESSONS.forEach(lesson => {
+                const s = getState(lesson.id);
+                const div = document.createElement('div');
+                let status = '';
+                let cls = 'nav-lesson px-3 py-2 rounded-2xl mb-1 cursor-pointer flex items-center gap-2 text-sm';
+                
+                if (s.completed) {
+                    cls += ' completed';
+                    status = `<i class="fa-solid fa-check-circle text-emerald-600 ml-auto"></i>`;
+                } else if (s.advancedUnlocked) {
+                    status = `<span class="text-xs px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded ml-auto">Advanced open</span>`;
+                }
+
+                div.className = cls;
+                div.innerHTML = `
+                    <i class="fa-solid \${lesson.icon} w-5"></i>
+                    <div class="flex-1">
+                        <div class="font-medium">\${lesson.title}</div>
+                        <div class="text-[10px] text-slate-500">\${lesson.short}</div>
+                    </div>
+                    \${status}
+                `;
+                div.onclick = () => loadLesson(lesson.id);
+                container.appendChild(div);
+            });
+        }
+
+        let currentLessonId = null;
+
+        function loadLesson(id) {
+            currentLessonId = id;
+            const lesson = LESSONS.find(l => l.id === id);
+            const state = getState(id);
+            const container = document.getElementById('lesson-content');
+
+            let html = `
+                <div class="flex items-start justify-between">
+                    <div>
+                        <span class="px-3 py-1 text-xs font-bold bg-blue-100 text-blue-700 rounded-2xl">LESSON \${id + 1}</span>
+                        <h1 class="text-4xl font-bold tracking-tight mt-2">\${lesson.title}</h1>
+                    </div>
+                    <div>
+                        \${state.completed ? `<span class="mastery-badge px-4 py-1 rounded-2xl text-sm font-semibold flex items-center gap-2"><i class="fa-solid fa-check"></i> COMPLETED</span>` : ''}
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <h3 class="font-semibold text-lg mb-3 flex items-center gap-2"><i class="fa-brands fa-youtube text-red-600"></i> Recommended Videos</h3>
+                    <div class="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-2xl text-sm">
+                        <strong>Tip:</strong> For videos to play inside this page (no error 153 or "watch on YouTube"), run a local server first:<br>
+                        <code class="bg-yellow-100 px-1">cd ~/OSINT && python3 -m http.server 8000</code> then open <strong>http://localhost:8000/OSINT-Mastery-Lessons.html</strong>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            `;
+
+            lesson.videos.forEach(v => {
+                const vidId = v.url.split('v=')[1] || v.url.split('/').pop();
+                html += `
+                    <div>
+                        <div class="video-container mb-2">
+                            <iframe src="https://www.youtube.com/embed/\${vidId}?enablejsapi=1&amp;modestbranding=1&amp;rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                        <a href="\${v.url}" target="_blank" class="text-xs text-blue-700 hover:underline">\${v.title} →</a>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+
+            // Basic lesson
+            html += `
+                <div class="mt-8">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-bold text-xl">Basic Lesson</span>
+                        \${state.completed ? '<span class="text-emerald-600 text-sm">(Completed)</span>' : ''}
+                    </div>
+                    <div class="lesson-serif text-[15px]">\${lesson.basic.content}</div>
+
+                    <div class="mt-4">
+                        <h4 class="font-semibold mb-2">Learning Objectives</h4>
+                        <ul class="list-disc pl-6 text-sm space-y-1">
+                            \${lesson.basic.objectives.map(o => `<li>\${o}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <button onclick="takeQuiz(\${id}, false)" class="mt-5 w-full md:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-2xl flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-dice"></i> Take Basic Quiz (must score ≥80% to complete)
+                    </button>
+                    <div id="basic-quiz-result-\${id}" class="mt-3 text-sm"></div>
+                </div>
+            `;
+
+            // Advanced (only if completed or unlocked)
+            const showAdvanced = state.completed || state.advancedUnlocked;
+            if (showAdvanced) {
+                html += `
+                    <div class="mt-10 pt-6 border-t">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="font-bold text-xl text-amber-700">Advanced Lesson</span>
+                            <span class="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 rounded">Unlocked</span>
+                        </div>
+                        <div class="lesson-serif text-[15px]">\${lesson.advanced.content}</div>
+
+                        <button onclick="takeQuiz(\${id}, true)" class="mt-5 w-full md:w-auto px-6 py-3 bg-amber-700 hover:bg-amber-800 text-white font-semibold rounded-2xl flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-dice"></i> Take Advanced Quiz
+                        </button>
+                        <div id="advanced-quiz-result-\${id}" class="mt-3 text-sm"></div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="mt-8 p-4 bg-slate-100 rounded-2xl text-sm text-slate-600">
+                        <i class="fa-solid fa-lock mr-2"></i> Complete the Basic Quiz with ≥80% to unlock the Advanced lesson.
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+
+            // Highlight active in nav
+            document.querySelectorAll('#lesson-nav > div').forEach(el => el.classList.remove('active'));
+            const navItems = document.querySelectorAll('#lesson-nav > div');
+            if (navItems[id]) navItems[id].classList.add('active');
+        }
+
+        function takeQuiz(lessonId, isAdvanced) {
+            const lesson = LESSONS.find(l => l.id === lessonId);
+            const pool = isAdvanced ? lesson.advancedQuestions : lesson.basicQuestions;
+            if (!pool || pool.length === 0) {
+                alert("Advanced quiz for this lesson is still being expanded. Do the basic one first or check back soon.");
+                return;
+            }
+            const questions = [...pool].sort(() => 0.5 - Math.random()).slice(0, 5); // 5 random
+            renderQuizModal(lessonId, questions, isAdvanced);
+        }
+
+        function renderQuizModal(lessonId, questions, isAdvanced) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/60 flex items-center justify-center z-[100] p-4';
+            let html = `
+                <div class="bg-white rounded-3xl max-w-2xl w-full p-6 max-h-[90vh] overflow-auto">
+                    <div class="flex justify-between mb-4">
+                        <div class="font-bold">\${isAdvanced ? 'Advanced' : 'Basic'} Quiz — Lesson \${lessonId + 1}</div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-2xl leading-none">&times;</button>
+                    </div>
+                    <form id="quiz-form">
+            `;
+
+            questions.forEach((q, i) => {
+                html += `<div class="mb-5"><div class="font-medium mb-2">\${i+1}. \${q.q}</div>`;
+                q.o.forEach((opt, oi) => {
+                    html += `<label class="flex items-center gap-2 mb-1 cursor-pointer">
+                        <input type="radio" name="q\${i}" value="\${oi}" class="accent-emerald-700"> \${opt}
+                    </label>`;
+                });
+                html += `</div>`;
+            });
+
+            html += `
+                    <button type="button" onclick="gradeQuiz(this, \${lessonId}, \${isAdvanced}, \${JSON.stringify(questions)})" 
+                            class="mt-2 w-full py-3 bg-emerald-700 text-white font-bold rounded-2xl">Submit Answers</button>
+                    </form>
+                </div>
+            `;
+            modal.innerHTML = html;
+            document.body.appendChild(modal);
+        }
+
+        window.gradeQuiz = function(btn, lessonId, isAdvanced, questions) {
+            const form = btn.closest('form');
+            let correct = 0;
+            const results = [];
+
+            questions.forEach((q, i) => {
+                const selected = form.querySelector(`input[name="q\${i}"]:checked`);
+                const userVal = selected ? parseInt(selected.value) : -1;
+                const isCorrect = userVal === q.a;
+                if (isCorrect) correct++;
+                results.push({i, isCorrect, userVal, q});
+            });
+
+            const score = Math.round((correct / questions.length) * 100);
+            const passed = score >= 80;
+
+            let feedback = `<div class="mt-4 p-4 bg-slate-50 rounded-2xl text-sm">`;
+            feedback += `<div class="font-bold text-lg mb-2">Score: \${score}% (\${correct}/\${questions.length})</div>`;
+            
+            results.forEach(r => {
+                feedback += `<div class="mb-1 \${r.isCorrect ? 'text-emerald-700' : 'text-red-600'}">
+                    Q\${r.i+1}: \${r.isCorrect ? '✓' : '✗'} \${r.q.e}
+                </div>`;
+            });
+            feedback += `</div>`;
+
+            const state = getState(lessonId);
+
+            if (!isAdvanced) {
+                state.basicScore = Math.max(state.basicScore || 0, score);
+                if (passed && !state.completed) {
+                    state.completed = true;
+                    state.advancedUnlocked = true;
+                    feedback += `<div class="mt-3 text-emerald-700 font-semibold">🎉 Basic passed (≥80%)! Lesson marked complete and Advanced lesson unlocked.</div>`;
+                }
+            } else {
+                state.advancedScore = Math.max(state.advancedScore || 0, score);
+                if (passed) {
+                    feedback += `<div class="mt-3 text-emerald-700 font-semibold">Excellent advanced mastery!</div>`;
+                }
+            }
+
+            saveState(lessonId, state);
+            form.insertAdjacentHTML('beforeend', feedback);
+            btn.disabled = true;
+            btn.textContent = 'Quiz Recorded';
+
+            // Auto reload lesson view after short delay so user sees completion badge
+            setTimeout(() => {
+                if (currentLessonId === lessonId) loadLesson(lessonId);
+            }, 1800);
+        };
+
+        function resetAllProgress() {
+            if (!confirm('Reset ALL lesson progress and quiz scores?')) return;
+            LESSONS.forEach(l => localStorage.removeItem('osint-lesson-' + l.id));
+            location.reload();
+        }
+
+        function init() {
+            try {
+                initTailwind();
+                updateNav();
+                updateOverallProgress();
+
+                // Load first lesson by default
+                loadLesson(0);
+
+                // Hide the static fallback once dynamic content loads
+                const fallback = document.getElementById('static-fallback');
+                if (fallback) fallback.style.display = 'none';
+
+                // Keyboard hint
+                console.log('%c[OSINT Lessons] Enhanced version loaded successfully on Fedora 44 KDE. Complete basic quizzes at ≥80% to unlock advanced + auto-complete lessons.', 'color:#64748b');
+            } catch (e) {
+                console.error('OSINT Lessons init error:', e);
+                const content = document.getElementById('lesson-content');
+                if (content) {
+                    content.innerHTML = '<div class="p-6 bg-red-50 border border-red-200 rounded-2xl"><strong>JavaScript error prevented lessons from loading.</strong><br>Please open Developer Tools (F12 or right-click → Inspect) → Console tab, copy any red error messages, and tell me what you see. Also try opening in a different browser (Firefox recommended).</div>' + content.innerHTML;
+                }
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
