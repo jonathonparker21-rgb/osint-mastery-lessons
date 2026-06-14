@@ -40,7 +40,7 @@
                     <div class="w-36 h-2 bg-slate-200 rounded-full overflow-hidden">
                         <div id="progress-fill" class="h-2 bg-emerald-600 transition-all" style="width:0%"></div>
                     </div>
-                    <span id="progress-text" class="font-mono text-emerald-700 font-semibold">0/8 lessons</span>
+                    <span id="progress-text" class="font-mono text-emerald-700 font-semibold">0/9 lessons</span>
                 </div>
                 <button onclick="resetAllProgress()" class="text-xs px-3 py-1.5 bg-white border hover:bg-red-50 text-red-600 rounded-2xl flex items-center gap-x-1">
                     <i class="fa-solid fa-undo"></i> <span class="hidden md:inline">Reset All</span>
@@ -189,43 +189,10 @@
                             <li><strong>Username search</strong> — Use Maigret and Sherlock on every name/alias. Look for recent posts or activity that shows current location.</li>
                             <li><strong>Email intel</strong> — Run Holehe + h8mail on any emails. New registrations or breached accounts in the last few weeks are strong leads.</li>
                             <li><strong>Media &amp; geolocation</strong> — Download any public photos/videos with yt-dlp, then run exiftool for GPS/timestamps. Reverse image search on Yandex or Google Lens.</li>
-                            <li><strong>IP capture &amp; geolocation</strong> — See the dedicated section below for creating a tracking link the jumper might click.</li>
                             <li><strong>Graph &amp; report</strong> — Use Maltego or Obsidian Canvas to map associates/family. Export a clean PDF report with timestamps and sources for the bondsman.</li>
                         </ol>
 
-                        <h4 class="font-semibold mt-6">Capturing IP Address and Geolocating a Target (Authorized Use)</h4>
-                        <p class="text-sm">This is a common technique in authorized investigations (with bondsman permission). The goal is to get the jumper to visit a link you control so you can see their current IP and approximate location.</p>
-                        
-                        <div class="mt-3 p-3 bg-slate-100 rounded-2xl text-xs">
-                            <strong>Recommended easy tools (no coding needed):</strong><br>
-                            • Grabify.link or IPLogger.org — Create a tracking link, disguise it as a "gift card claim" or "photo proof of payment". Send via text/email that the bondsman authorizes.<br>
-                            • When they click, you get IP, approximate city, ISP, device info, and a map link.<br>
-                            • Then use free geolocation: ip-api.com or ipinfo.io (free tier) on the IP for more details.
-                        </div>
-
-                        <h5 class="font-semibold mt-4">How to Create a Simple "Phishing-Style" Gift Card Tracker Link (Educational — Authorized Investigations Only)</h5>
-                        <p class="text-sm">This must only be used when you have explicit written permission from the bondsman and it is legal in your jurisdiction. Deceptive links can have serious legal consequences if misused.</p>
-                        
-                        <pre class="text-xs mt-2"><code>// Simple self-hosted example (host this HTML on a free site or your own Cloudflare Pages worker)
-// Save as gift-card-claim.html and send a shortened link
-&lt;html&gt;&lt;head&gt;&lt;title&gt;Claim Your $100 Gift Card&lt;/title&gt;&lt;/head&gt;
-&lt;body&gt;
-&lt;h1&gt;Congratulations! You've won a $100 Visa Gift Card&lt;/h1&gt;
-&lt;p&gt;Click below to claim (limited time)&lt;/p&gt;
-&lt;button onclick="claim()"&gt;Claim Now&lt;/button&gt;
-&lt;script&gt;
-function claim() {
-  // This page can be hosted to log the visit (IP is captured server-side)
-  alert('Thank you. Your claim has been submitted. Check your email.');
-  // In a real tracker, the server logs the request headers (IP, user-agent, etc.)
-  window.location = 'https://your-real-redirect-url.com'; // e.g. a real gift card site or thank you page
-}
-&lt;/script&gt;
-&lt;/body&gt;&lt;/html&gt;</code></pre>
-
-                        <p class="text-xs mt-1 text-red-600">For actual IP logging you need server-side code (PHP, Node, or Cloudflare Worker that reads CF-Connecting-IP or x-forwarded-for header and logs it before redirecting). Tools like Grabify do this for you instantly. Always document the authorization from the bondsman before using any tracking link.</p>
-
-                        <p class="text-sm mt-2"><strong>Next step after getting an IP:</strong> Geolocate it, then cross-reference with recent social activity from the username/email searches above. Recent posts near that geo area are very strong leads.</p>
+                        <p class="text-sm mt-2"><strong>Note:</strong> IP capture and link tracking techniques have their own dedicated lesson later in the course (see the lesson list on the left). Study the basic person lookup tools first, then move to the dedicated tracking lesson.</p>
                     </div>
 
                     <div class="mt-4">
@@ -237,6 +204,11 @@ function claim() {
                             <li>Know your existing panel launchers (OSINT, Tech-Tools, Cybersec)</li>
                             <li>Know exactly what data bondsmen value most for locating bail jumpers</li>
                         </ul>
+                    </div>
+
+                    <div class="mt-6 p-3 bg-blue-50 border border-blue-200 rounded-2xl">
+                        <strong>Study Before Taking the Quiz:</strong><br>
+                        Review the videos at the top of this lesson, the person lookup steps, and the legal reminders. The quiz will test practical knowledge for bondsman work.
                     </div>
 
                     <button onclick="takeQuiz(0, false)" class="mt-5 w-full md:w-auto px-6 py-3 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-2xl flex items-center justify-center gap-2">
@@ -568,6 +540,108 @@ yt-dlp "https://www.tiktok.com/@user/video/123" -o "case/%(title)s.%(ext)s"</cod
                     {q:"What does exiftool commonly reveal that is gold for OSINT?", o:["Only file size","GPS coordinates, camera model, and exact creation timestamps","Passwords","Nothing useful"], a:1, e:"Embedded metadata is frequently overlooked."}
                 ],
                 advancedQuestions: []
+            },
+            {
+                id: 8,
+                title: "IP Tracking & Link Geolocation (Authorized Investigations)",
+                short: "Create tracking links to capture IP and geolocate suspects",
+                icon: "fa-map-marker-alt",
+                videos: [
+                    {title: "OSINT Link Tracking & IP Geolocation Tutorial", url: "https://www.youtube.com/watch?v=example-osint-tracking"}, // Replace with real relevant video if available; use Grabify/IPLogger tutorials
+                    {title: "How to Use Grabify for OSINT IP Tracking", url: "https://www.youtube.com/results?search_query=grabify+osint+tutorial"}
+                ],
+                basic: {
+                    objectives: [
+                        "Understand legal and ethical requirements for using tracking links",
+                        "Use web-based tools like Grabify and IPLogger to create disguised links",
+                        "Disguise links as 'gift cards' or similar (authorized use only)",
+                        "Capture IP, user-agent, and approximate location from clicks",
+                        "Geolocate captured IPs using free public APIs",
+                        "Integrate IP data with previous person lookup results (usernames, emails, media)"
+                    ],
+                    content: `
+                        <p class="lesson-serif"><strong>This is a dedicated practical lesson for capturing IP addresses and geolocating targets during authorized fugitive investigations.</strong> This is for bail bondsman work only — with explicit permission. Misuse can be illegal.</p>
+
+                        <h4 class="font-semibold mt-4">Study These Videos and Materials Before the Quiz</h4>
+                        <p>Watch the recommended videos above. Key concepts to understand before quizzing:</p>
+                        <ul class="list-disc pl-6 text-sm">
+                            <li>How tracking links work (they log the visitor's IP and headers when the page loads)</li>
+                            <li>Common tools: Grabify.link, IPLogger.org — free, no hosting needed</li>
+                            <li>Geolocation APIs: ip-api.com/json/IP or ipinfo.io</li>
+                            <li>Disguising the link (URL shorteners + believable landing page like a gift card)</li>
+                        </ul>
+
+                        <h4 class="font-semibold mt-6">Step-by-Step: Creating a Tracking Link (Easy Tools First)</h4>
+                        <ol class="list-decimal pl-6 text-sm space-y-1">
+                            <li>Go to <strong>Grabify.link</strong> or <strong>IPLogger.org</strong></li>
+                            <li>Create a new tracking link (it gives you a unique URL)</li>
+                            <li>Optional: Set a custom domain or use a URL shortener (bit.ly, tinyurl) to make it look clean</li>
+                            <li>Create a simple believable landing page (see example below) and host it, or just use the tracking URL directly</li>
+                            <li>Send the link via text/email that the bondsman has approved (e.g., "Here's proof of your bond payment" or "Claim your reward for info")</li>
+                            <li>When clicked, refresh the Grabify/IPLogger page — you get IP, city, ISP, device, etc.</li>
+                            <li>Geolocate the IP: Paste into ip-api.com or use this in browser console: <code>fetch('https://ip-api.com/json/THE_IP').then(r => r.json()).then(console.log)</code></li>
+                        </ol>
+
+                        <h4 class="font-semibold mt-6">Example: Simple "Gift Card" Landing Page (Self-Hosted)</h4>
+                        <p class="text-sm">Host this HTML somewhere (free on GitHub Pages, Netlify, or your own Cloudflare Pages). When the target visits, your tracking service (or server logs) captures the IP.</p>
+                        <pre class="text-xs"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Claim Your Reward&lt;/title&gt;&lt;/head&gt;
+&lt;body style="font-family: Arial; text-align:center; padding:50px;"&gt;
+  &lt;h1&gt;🎁 You've earned a $100 Gift Card!&lt;/h1&gt;
+  &lt;p&gt;Click below to claim instantly.&lt;/p&gt;
+  &lt;button onclick="claim()" style="padding:15px 30px; font-size:18px;"&gt;Claim Now&lt;/button&gt;
+  &lt;script&gt;
+    function claim() {
+      alert('Thank you. Check your email or text for the code in 5 minutes.');
+      // In a real hosted version, the server or tracking service logs the request
+      window.location = 'https://example.com/thank-you'; // real redirect
+    }
+  &lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
+
+                        <h4 class="font-semibold mt-6">Advanced / Self-Hosted Option (Using Your Cloudflare)</h4>
+                        <p class="text-sm">For more control, create a simple Cloudflare Worker that redirects and logs the IP (visible in CF logs or by adding KV/storage).</p>
+                        <p class="text-xs">Example Worker skeleton (paste in Cloudflare Workers dashboard, route a subdomain to it):</p>
+                        <pre class="text-xs"><code>addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+async function handleRequest(request) {
+  const ip = request.headers.get('CF-Connecting-IP')
+  console.log('Captured IP:', ip, 'User-Agent:', request.headers.get('User-Agent'))
+  // Log to KV or external if needed
+  return Response.redirect('https://real-gift-site.com/claim', 302)
+}</code></pre>
+
+                        <h4 class="font-semibold mt-6">Important Warnings (Read Before Using)</h4>
+                        <ul class="list-disc pl-6 text-sm text-red-700">
+                            <li>Only use with written authorization from the bondsman.</li>
+                            <li>Never use for personal reasons, harassment, or without legal basis.</li>
+                            <li>Many jurisdictions have rules about deceptive links — document everything.</li>
+                            <li>Combine the IP with other OSINT (recent posts near that location = high value lead).</li>
+                            <li>IPs can be VPNs or mobile — cross-reference with everything else.</li>
+                        </ul>
+
+                        <p class="text-sm mt-4"><strong>Study the videos and the steps above before taking the quiz.</strong> Practice creating a real tracking link on Grabify (use your own IP first to test).</p>
+                    `
+                },
+                advanced: {
+                    content: `
+                        <h4 class="font-semibold">Advanced: Building Custom Trackers + Integration</h4>
+                        <p>Combine with your repair tools: If you later recover a device, use scrcpy to check browsing history for the tracking links you sent.</p>
+                        <p>Create a full "gift card" site with multiple tracking pixels or a Cloudflare Worker that also collects more headers and stores results in a simple dashboard.</p>
+                        <p>Advanced chaining: IP geo + recent Maigret results + vehicle info from photos = very strong location prediction for the bondsman.</p>
+                        <p>Always update your reports with exact timestamps and the tracking service used.</p>
+                    `
+                },
+                basicQuestions: [
+                    {q:"What is the main purpose of a tracking link like Grabify in authorized fugitive work?", o:["To hack accounts", "To capture the visitor's IP and approximate location when they click", "To send malware", "To phish passwords"], a:1, e:"It logs the IP and headers server-side when the link is visited."},
+                    {q:"Which free tool is commonly recommended for quick IP tracking without hosting your own server?", o:["Grabify or IPLogger", "Only your own PHP script", "Browser dev tools alone", "Google search"], a:0, e:"Grabify and IPLogger are popular no-code options for this exact OSINT use case."},
+                    {q:"After capturing an IP from a tracking link, what should you do next?", o:["Ignore it", "Geolocate it with ip-api.com or ipinfo.io and cross-reference with social activity", "Immediately confront the person", "Delete the data"], a:1, e:"IP + recent posts or accounts near that location is powerful."},
+                    {q:"True or False: You should always have written authorization from the bondsman before using any tracking or disguised links.", o:["True", "False"], a:0, e:"This is critical for legal and ethical reasons in bail bondsman work."}
+                ],
+                advancedQuestions: [
+                    {q:"In a Cloudflare Worker used for tracking, which header often contains the real visitor IP?", o:["User-Agent", "CF-Connecting-IP", "Referer", "Cookie"], a:1, e:"Cloudflare provides CF-Connecting-IP for the original client IP."}
+                ]
             }
         ];
 
