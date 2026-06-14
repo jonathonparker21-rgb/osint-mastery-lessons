@@ -64,6 +64,39 @@
         </div>
     </div>
 
+    <!-- Learning Session Tracker -->
+    <div id="learning-tracker" class="max-w-7xl mx-auto px-6 sticky top-[60px] z-40 bg-white border-b shadow-sm py-2 mb-4">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div class="font-semibold text-slate-700 flex items-center gap-2">
+                <i class="fa-solid fa-clock text-blue-700"></i> 
+                <span>Learning Session</span>
+            </div>
+            <div class="flex items-center gap-x-3 font-mono bg-slate-100 px-3 py-1 rounded-2xl">
+                <span class="text-blue-800">This session: <span id="session-timer" class="font-bold">00:00:00</span></span>
+                <span class="text-slate-500">|</span>
+                <span class="text-emerald-700">Total: <span id="total-timer" class="font-bold">0h 0m</span></span>
+            </div>
+            <div class="flex items-center gap-x-2">
+                <button id="start-btn" onclick="startLearningSession()" 
+                        class="px-4 py-1 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-2xl flex items-center gap-1">
+                    <i class="fa-solid fa-play"></i> <span>Start</span>
+                </button>
+                <button id="pause-btn" onclick="pauseLearningSession()" disabled
+                        class="px-4 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-2xl flex items-center gap-1">
+                    <i class="fa-solid fa-pause"></i> <span>Pause</span>
+                </button>
+                <button id="exit-btn" onclick="exitLearningSession()" disabled
+                        class="px-4 py-1 bg-red-700 hover:bg-red-800 text-white text-xs font-semibold rounded-2xl flex items-center gap-1">
+                    <i class="fa-solid fa-sign-out-alt"></i> <span>Exit &amp; Save</span>
+                </button>
+            </div>
+            <div id="session-status" class="text-xs text-slate-500 font-medium">Ready — click Start to track study time</div>
+            <div class="ml-auto text-xs text-blue-600">
+                <button onclick="resumeLastLesson()" class="underline hover:no-underline">Resume last position</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Static fallback so the page is NEVER completely blank -->
     <div id="static-fallback" class="max-w-7xl mx-auto px-6">
         <div class="bg-white border rounded-3xl p-6 mb-6">
@@ -148,6 +181,51 @@
                         </ul>
                         
                         <p class="mt-4 text-sm bg-red-50 border border-red-200 p-3 rounded-2xl"><strong>Legal &amp; Business Reminder:</strong> Only use publicly available data. Get everything in writing with the bondsman. Document chain of custody. Never confront the jumper yourself unless you are licensed to do so in your jurisdiction.</p>
+
+                        <h4 class="font-semibold mt-8">Getting Started: Basic Person Lookup for Fugitive Recovery</h4>
+                        <p class="text-sm">When a bondsman gives you a name, phone, or last known info, follow this quick workflow using your existing tools (launch from the OSINT folder on your panel):</p>
+                        <ol class="list-decimal pl-6 text-sm mt-2 space-y-1">
+                            <li><strong>Seed data collection</strong> — Ask for full name + aliases, DOB, last known address, phone, email, vehicle, known associates, recent photo, social handles.</li>
+                            <li><strong>Username search</strong> — Use Maigret and Sherlock on every name/alias. Look for recent posts or activity that shows current location.</li>
+                            <li><strong>Email intel</strong> — Run Holehe + h8mail on any emails. New registrations or breached accounts in the last few weeks are strong leads.</li>
+                            <li><strong>Media &amp; geolocation</strong> — Download any public photos/videos with yt-dlp, then run exiftool for GPS/timestamps. Reverse image search on Yandex or Google Lens.</li>
+                            <li><strong>IP capture &amp; geolocation</strong> — See the dedicated section below for creating a tracking link the jumper might click.</li>
+                            <li><strong>Graph &amp; report</strong> — Use Maltego or Obsidian Canvas to map associates/family. Export a clean PDF report with timestamps and sources for the bondsman.</li>
+                        </ol>
+
+                        <h4 class="font-semibold mt-6">Capturing IP Address and Geolocating a Target (Authorized Use)</h4>
+                        <p class="text-sm">This is a common technique in authorized investigations (with bondsman permission). The goal is to get the jumper to visit a link you control so you can see their current IP and approximate location.</p>
+                        
+                        <div class="mt-3 p-3 bg-slate-100 rounded-2xl text-xs">
+                            <strong>Recommended easy tools (no coding needed):</strong><br>
+                            • Grabify.link or IPLogger.org — Create a tracking link, disguise it as a "gift card claim" or "photo proof of payment". Send via text/email that the bondsman authorizes.<br>
+                            • When they click, you get IP, approximate city, ISP, device info, and a map link.<br>
+                            • Then use free geolocation: ip-api.com or ipinfo.io (free tier) on the IP for more details.
+                        </div>
+
+                        <h5 class="font-semibold mt-4">How to Create a Simple "Phishing-Style" Gift Card Tracker Link (Educational — Authorized Investigations Only)</h5>
+                        <p class="text-sm">This must only be used when you have explicit written permission from the bondsman and it is legal in your jurisdiction. Deceptive links can have serious legal consequences if misused.</p>
+                        
+                        <pre class="text-xs mt-2"><code>// Simple self-hosted example (host this HTML on a free site or your own Cloudflare Pages worker)
+// Save as gift-card-claim.html and send a shortened link
+&lt;html&gt;&lt;head&gt;&lt;title&gt;Claim Your $100 Gift Card&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Congratulations! You've won a $100 Visa Gift Card&lt;/h1&gt;
+&lt;p&gt;Click below to claim (limited time)&lt;/p&gt;
+&lt;button onclick="claim()"&gt;Claim Now&lt;/button&gt;
+&lt;script&gt;
+function claim() {
+  // This page can be hosted to log the visit (IP is captured server-side)
+  alert('Thank you. Your claim has been submitted. Check your email.');
+  // In a real tracker, the server logs the request headers (IP, user-agent, etc.)
+  window.location = 'https://your-real-redirect-url.com'; // e.g. a real gift card site or thank you page
+}
+&lt;/script&gt;
+&lt;/body&gt;&lt;/html&gt;</code></pre>
+
+                        <p class="text-xs mt-1 text-red-600">For actual IP logging you need server-side code (PHP, Node, or Cloudflare Worker that reads CF-Connecting-IP or x-forwarded-for header and logs it before redirecting). Tools like Grabify do this for you instantly. Always document the authorization from the bondsman before using any tracking link.</p>
+
+                        <p class="text-sm mt-2"><strong>Next step after getting an IP:</strong> Geolocate it, then cross-reference with recent social activity from the username/email searches above. Recent posts near that geo area are very strong leads.</p>
                     </div>
 
                     <div class="mt-4">
@@ -549,6 +627,10 @@ yt-dlp "https://www.tiktok.com/@user/video/123" -o "case/%(title)s.%(ext)s"</cod
 
         function loadLesson(id) {
             currentLessonId = id;
+            // Save position for resume feature
+            localStorage.setItem('osint_last_lesson_id', id);
+            localStorage.setItem('osint_last_scroll', window.scrollY || 0);
+
             const lesson = LESSONS.find(l => l.id === id);
             const state = getState(id);
             const container = document.getElementById('lesson-content');
@@ -758,6 +840,15 @@ yt-dlp "https://www.tiktok.com/@user/video/123" -o "case/%(title)s.%(ext)s"</cod
                 const fallback = document.getElementById('static-fallback');
                 if (fallback) fallback.style.display = 'none';
 
+                // Initialize learning time tracker
+                loadLearningState();
+
+                // If there was a session running when page was closed, offer to resume timer
+                if (localStorage.getItem('osint_session_active') === 'true') {
+                    const statusEl = document.getElementById('session-status');
+                    if (statusEl) statusEl.textContent = 'Previous session was active — click Start to continue timer';
+                }
+
                 // Keyboard hint
                 console.log('%c[OSINT Lessons] Enhanced version loaded successfully on Fedora 44 KDE. Complete basic quizzes at ≥80% to unlock advanced + auto-complete lessons.', 'color:#64748b');
             } catch (e) {
@@ -770,6 +861,190 @@ yt-dlp "https://www.tiktok.com/@user/video/123" -o "case/%(title)s.%(ext)s"</cod
         }
 
         window.onload = init;
+
+        // ==================== LEARNING SESSION TRACKER (added for accurate time tracking + resume) ====================
+        let sessionTimerInterval = null;
+        let sessionStartTime = null;
+        let sessionPausedTime = 0;
+        let isSessionRunning = false;
+        let idleTimer = null;
+        const IDLE_LIMIT_SECONDS = 300; // 5 minutes auto-stop
+
+        function loadLearningState() {
+            const total = parseInt(localStorage.getItem('osint_total_learning_seconds') || '0');
+            const lastLesson = localStorage.getItem('osint_last_lesson_id');
+            const lastScroll = parseInt(localStorage.getItem('osint_last_scroll') || '0');
+            updateTotalDisplay(total);
+            if (lastLesson) {
+                window.osintLastLesson = parseInt(lastLesson);
+                window.osintLastScroll = lastScroll;
+            }
+            return { total, lastLesson: window.osintLastLesson, lastScroll };
+        }
+
+        function updateTotalDisplay(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const el = document.getElementById('total-timer');
+            if (el) el.textContent = `${hours}h ${minutes}m`;
+        }
+
+        function formatTime(seconds) {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+
+        function updateSessionTimer() {
+            if (!isSessionRunning || !sessionStartTime) return;
+            const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000) + sessionPausedTime;
+            const el = document.getElementById('session-timer');
+            if (el) el.textContent = formatTime(elapsed);
+        }
+
+        function startLearningSession() {
+            if (isSessionRunning) return;
+
+            const state = loadLearningState();
+
+            // Pickup where left off
+            if (state.lastLesson !== undefined && !window.osintSessionStartedThisLoad) {
+                const shouldResume = confirm(`Resume Lesson ${state.lastLesson + 1} where you left off last time?`);
+                if (shouldResume) {
+                    if (state.lastLesson === 0) {
+                        window.scrollTo(0, state.lastScroll || 0);
+                    } else {
+                        loadLesson(state.lastLesson);
+                        setTimeout(() => window.scrollTo(0, state.lastScroll || 0), 700);
+                    }
+                }
+            }
+            window.osintSessionStartedThisLoad = true;
+
+            isSessionRunning = true;
+            sessionStartTime = Date.now();
+            sessionPausedTime = parseInt(localStorage.getItem('osint_current_session_paused') || '0');
+
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('pause-btn').disabled = false;
+            document.getElementById('exit-btn').disabled = false;
+            const statusEl = document.getElementById('session-status');
+            if (statusEl) statusEl.textContent = 'Session running — tracking study time';
+
+            if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+            sessionTimerInterval = setInterval(updateSessionTimer, 1000);
+            updateSessionTimer();
+
+            resetIdleTimer();
+            setupActivityListeners();
+
+            localStorage.setItem('osint_session_active', 'true');
+        }
+
+        function pauseLearningSession() {
+            if (!isSessionRunning) return;
+            isSessionRunning = false;
+            const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+            sessionPausedTime += elapsed;
+
+            if (sessionTimerInterval) {
+                clearInterval(sessionTimerInterval);
+                sessionTimerInterval = null;
+            }
+
+            const currentTotal = parseInt(localStorage.getItem('osint_total_learning_seconds') || '0');
+            const newTotal = currentTotal + sessionPausedTime;
+            localStorage.setItem('osint_total_learning_seconds', newTotal);
+            updateTotalDisplay(newTotal);
+            localStorage.setItem('osint_current_session_paused', sessionPausedTime);
+
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            const statusEl = document.getElementById('session-status');
+            if (statusEl) statusEl.textContent = 'Paused — click Start to resume';
+
+            clearIdleTimer();
+            localStorage.setItem('osint_session_active', 'false');
+        }
+
+        function exitLearningSession() {
+            if (isSessionRunning) pauseLearningSession();
+
+            const currentTotal = parseInt(localStorage.getItem('osint_total_learning_seconds') || '0');
+            const newTotal = currentTotal + sessionPausedTime;
+            localStorage.setItem('osint_total_learning_seconds', newTotal);
+            updateTotalDisplay(newTotal);
+
+            saveCurrentPosition();
+
+            isSessionRunning = false;
+            sessionStartTime = null;
+            sessionPausedTime = 0;
+            localStorage.removeItem('osint_current_session_paused');
+            localStorage.setItem('osint_session_active', 'false');
+
+            if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            document.getElementById('exit-btn').disabled = true;
+            const timerEl = document.getElementById('session-timer');
+            if (timerEl) timerEl.textContent = '00:00:00';
+            const statusEl = document.getElementById('session-status');
+            if (statusEl) statusEl.textContent = 'Session saved. Time added to your total.';
+
+            clearIdleTimer();
+            alert('Session ended. Time saved. Use "Resume last position" or Start to continue.');
+        }
+
+        function saveCurrentPosition() {
+            let currentId = (typeof window.currentLessonId !== 'undefined') ? window.currentLessonId : 0;
+            localStorage.setItem('osint_last_lesson_id', currentId);
+            localStorage.setItem('osint_last_scroll', window.scrollY || 0);
+        }
+
+        function resumeLastLesson() {
+            const lastId = localStorage.getItem('osint_last_lesson_id');
+            const lastScroll = parseInt(localStorage.getItem('osint_last_scroll') || '0');
+            if (!lastId) {
+                alert('No saved position yet.');
+                return;
+            }
+            const id = parseInt(lastId);
+            if (id === 0) {
+                window.scrollTo(0, lastScroll);
+            } else {
+                loadLesson(id);
+                setTimeout(() => window.scrollTo(0, lastScroll), 600);
+            }
+        }
+
+        function resetIdleTimer() {
+            clearIdleTimer();
+            idleTimer = setTimeout(() => {
+                if (isSessionRunning) {
+                    alert('Auto-paused after 5 minutes of no activity (to keep your reported learning hours accurate).');
+                    pauseLearningSession();
+                }
+            }, IDLE_LIMIT_SECONDS * 1000);
+        }
+
+        function clearIdleTimer() {
+            if (idleTimer) {
+                clearTimeout(idleTimer);
+                idleTimer = null;
+            }
+        }
+
+        function setupActivityListeners() {
+            const reset = () => { if (isSessionRunning) resetIdleTimer(); };
+            ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'].forEach(ev => {
+                document.addEventListener(ev, reset, { passive: true });
+            });
+        }
+
+        function init() {
     </script>
 </body>
 </html>
